@@ -52,6 +52,21 @@
 					});
 				});
 
+				suite('clear behavior', function() {
+					var element;
+
+					setup(function() {
+						element = fixture('TrivialElement');
+					});
+
+					test('fires filter event when clicking clear', function(done) {
+						element.addEventListener('paper-search-clear', function() {
+							done();
+						});
+						element._filter();
+					});
+				});
+
 				suite('search behavior', function() {
 					var element;
 
