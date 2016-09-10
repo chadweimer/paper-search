@@ -107,6 +107,7 @@ Dialog with which the user can filter the result set
 						<paper-toolbar>
 							<paper-icon-button icon="arrow-back" on-tap="_tapSelectValues"></paper-icon-button>
 							<span class="title">[[_selectedFilter.name]]</span>
+							<paper-button on-tap="_tapApply" dialog-confirm>[[saveButton]]</paper-button>
 						</paper-toolbar>
 
 						<iron-list id="valuesList" items="[[_selectedFilterValues]]" as="filterValue">
@@ -247,11 +248,19 @@ Dialog with which the user can filter the result set
 			this._selectedFilters = {};
 		},
 		_tapApply: function(e) {
+			if (this._selectedFilter) {
+				this._commitSelectValues();
+			}
 			this.selectedFilters = this._selectedFilters;
 
 			this.fire('save');
 		},
 		_tapSelectValues: function(e) {
+			this._commitSelectValues();
+
+			this.$.selector.deselect(this._selectedFilter);
+		},
+		_commitSelectValues: function() {
 			// Captured IDs of the selected items
 			const selectedValues = this._selectedFilterValues.filter(function(value) {
 				return value.selected;
@@ -261,8 +270,6 @@ Dialog with which the user can filter the result set
 			this._selectedFilters = Object.assign({}, this._selectedFilters, {
 				[this._selectedFilter.id] : selectedValues
 			});
-
-			this.$.selector.deselect(this._selectedFilter);
 		},
 
 		/**
