@@ -6,9 +6,10 @@
 <link rel="import" href="../iron-icons/image-icons.html">
 <link rel="import" href="../iron-input/iron-input.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../paper-badge/paper-badge.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../paper-styles/paper-styles.html">
+<link rel="import" href="../paper-styles/default-theme.html">
 
 <!--
 Bar in which the user can enter search terms and filter
@@ -18,7 +19,7 @@ Bar in which the user can enter search terms and filter
 <dom-module id="paper-search-bar">
 
 	<template>
-		<style>
+		<style include="iron-flex">
 			:host {
 				background: var(--background-color, white);
 				display: block;
@@ -34,6 +35,7 @@ Bar in which the user can enter search terms and filter
 
 			.icon {
 				color: var(--disabled-text-color);
+				@apply(--icon-styles);
 			}
 
 			#input {
@@ -42,10 +44,13 @@ Bar in which the user can enter search terms and filter
 				outline: 0;
 				padding: 16px 0;
 				cursor: text;
+				background: transparent;
+				color: inherit;
+				@apply(--input-styles);
 			}
 
 			#input[disabled] {
-				background: var(--background-color, white);
+				@apply(--disabled-input-styles);
 			}
 
 			.badge {

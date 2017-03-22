@@ -5,17 +5,12 @@
 <link rel="import" href="../iron-list/iron-list.html">
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-dialog/paper-dialog.html">
-<link rel="import" href="../paper-header-panel/paper-header-panel.html">
 <link rel="import" href="../paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-item/paper-item-body.html">
-<link rel="import" href="../paper-styles/paper-styles.html">
+<link rel="import" href="../paper-styles/default-theme.html">
 <link rel="import" href="../paper-checkbox/paper-checkbox.html">
-<link rel="import" href="../neon-animation/neon-animated-pages.html">
-<link rel="import" href="../neon-animation/neon-animatable.html">
-<link rel="import" href="../neon-animation/animations/fade-in-animation.html">
-<link rel="import" href="../neon-animation/animations/fade-out-animation.html">
 
 <!--
 Dialog with which the user can filter the result set
@@ -37,16 +32,18 @@ Dialog with which the user can filter the result set
 				--paper-toolbar-background: var(--paper-filter-toolbar-background);
 			}
 
-			.dialog,.animated {
+			.dialog,.page {
 				@apply(--layout-fit);
 			}
 
-			.animated {
+			.page {
+				@apply(--layout-vertical);
 				margin: 0;
+				padding: 0;
 			}
 
-			.filters,.value {
-				background: white;
+			.list {
+				@apply(--layout-flex);
 			}
 
 			.filter {
@@ -55,6 +52,7 @@ Dialog with which the user can filter the result set
 
 			.filter,.value {
 				cursor: pointer;
+				background: white;
 			}
 
 			/** Workaround for IE11 to center column */
@@ -75,57 +73,50 @@ Dialog with which the user can filter the result set
 			}
 		</style>
 
-		<paper-dialog id="dialog" class="dialog" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-			<array-selector id="selector" items="{{filters}}" selected="{{_selectedFilter}}"></array-selector>
+		<array-selector id="selector" items="{{filters}}" selected="{{_selectedFilter}}"></array-selector>
+		<paper-dialog id="dialog" class="dialog">
+			<div class="page" hidden$="[[_selectedFilter]]">
+				<paper-toolbar>
+					<paper-icon-button on-tap="close" icon="close"></paper-icon-button>
+					<span class="title"></span>
+					<paper-button on-tap="_tapReset" class="reset" hidden$="[[!_hasSelectedFilters(_selectedFilters)]]">[[resetButton]]</paper-button>
+					<paper-button on-tap="_tapApply" dialog-confirm>[[saveButton]]</paper-button>
+				</paper-toolbar>
 
-			<neon-animated-pages class="animated" selected="[[_getSelectedPage(_selectedFilter)]]" entry-animation="fade-in-animation" exit-animation="fade-out-animation">
-				<neon-animatable>
-					<paper-header-panel mode="seamed">
-						<paper-toolbar>
-							<paper-icon-button on-tap="close" icon="close"></paper-icon-button>
-							<span class="title"></span>
-							<paper-button on-tap="_tapReset" class="reset" hidden$="[[!_hasSelectedFilters(_selectedFilters)]]">[[resetButton]]</paper-button>
-							<paper-button on-tap="_tapApply" dialog-confirm>[[saveButton]]</paper-button>
-						</paper-toolbar>
+				<iron-list items="[[filters]]" as="filter" class="list">
+					<template>
+						<paper-item class="filter" on-tap="_tapSelectFilter">
+							<paper-ripple fit></paper-ripple>
+							<paper-item-body two-line class="filter-body">
+								<div class="name">[[filter.name]]</div>
+								<div secondary>[[_getSelectedValuesNames(filter, _selectedFilters)]]</div>
+							</paper-item-body>
+						</paper-item>
+					</template>
+				</iron-list>
+			</div>
 
-						<div class="filters">
-							<template is="dom-repeat" items="[[filters]]" as="filter">
-								<paper-item class="filter" on-tap="_tapSelectFilter">
-									<paper-ripple fit></paper-ripple>
-									<paper-item-body two-line class="filter-body">
-										<div class="name">[[filter.name]]</div>
-										<div secondary>[[_getSelectedValuesNames(filter, _selectedFilters)]]</div>
-									</paper-item-body>
-								</paper-item>
-							</template>
-						</div>
-					</paper-header-panel>
-				</neon-animatable>
+			<div class="page" hidden$="[[!_selectedFilter]]">
+				<paper-toolbar>
+					<paper-icon-button icon="arrow-back" on-tap="_tapSelectValues"></paper-icon-button>
+					<span class="title">[[_selectedFilter.name]]</span>
+					<paper-button on-tap="_tapApply" dialog-confirm>[[saveButton]]</paper-button>
+				</paper-toolbar>
 
-				<neon-animatable>
-					<paper-header-panel mode="seamed">
-						<paper-toolbar>
-							<paper-icon-button icon="arrow-back" on-tap="_tapSelectValues"></paper-icon-button>
-							<span class="title">[[_selectedFilter.name]]</span>
-							<paper-button on-tap="_tapApply" dialog-confirm>[[saveButton]]</paper-button>
-						</paper-toolbar>
-
-						<iron-list id="valuesList" items="[[_selectedFilterValues]]" as="filterValue">
-							<template>
-								<div class="value-holder">
-									<paper-item class="value">
-										<paper-checkbox name="[[filterValue.id]]" checked="{{filterValue.selected}}"></paper-checkbox>
-										<div>
-											[[filterValue.name]]
-											<span class="nrResults" hidden="[[!filterValue.count]]">([[filterValue.count]])</span>
-										</div>
-									</paper-item>
+				<iron-list id="valuesList" items="[[_selectedFilterValues]]" as="filterValue" class="list">
+					<template>
+						<div class="value-holder">
+							<paper-item class="value">
+								<paper-checkbox name="[[filterValue.id]]" checked="{{filterValue.selected}}"></paper-checkbox>
+								<div>
+									[[filterValue.name]]
+									<span class="nrResults" hidden="[[!filterValue.count]]">([[filterValue.count]])</span>
 								</div>
-							</template>
-						</iron-list>
-					</paper-header-panel>
-				</neon-animatable>
-			</neon-animated-pages>
+							</paper-item>
+						</div>
+					</template>
+				</iron-list>
+			</div>
 		</paper-dialog>
 	</template>
 </dom-module>
@@ -305,10 +296,6 @@ Dialog with which the user can filter the result set
 
 			return names.length > 0 ? names.join(', ') : this.noValuesLabel;
 		},
-		_getSelectedPage: function(_selectedFilter) {
-			// Show all filters if no filter is selected
-			return !_selectedFilter ? 0 : 1;
-		}
 	});
 
 })();
