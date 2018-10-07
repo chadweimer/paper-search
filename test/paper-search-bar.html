@@ -1,80 +1,80 @@
 <!doctype html>
 <html>
-	<head>
-		<title>paper-search-bar</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-		<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-		<script src="../../web-component-tester/browser.js"></script>
-		<script src="../../test-fixture/test-fixture-mocha.js"></script>
-		<script src="../../iron-test-helpers/mock-interactions.js"></script>
-
-		<link rel="import" href="../paper-search-bar.html">
-		<link rel="import" href="../../test-fixture/test-fixture.html">
-	</head>
-	<body>
-
-		<test-fixture id="TrivialElement">
-			<template>
-				<paper-search-bar></paper-search-bar>
-			</template>
-		</test-fixture>
-
-		<script>
-			suite('<paper-search-bar>', function() {
-				suite('clear behavior', function() {
-					var element;
-
-					setup(function() {
-						element = fixture('TrivialElement');
-					});
-
-					test('removes input when tapping clear', function() {
-						element.query = 'query';
-						element._clear();
-						expect(element.query).to.be.eql('');
-					});
-
-					test('fires clear event when clicking clear', function(done) {
-						element.addEventListener('paper-search-clear', function() {
-							done();
-						});
-						element._clear();
-					});
+<head>
+	<title>paper-search-bar</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+	<script src="../node_modules/wct-browser-legacy/browser.js"></script>
+	<script src="../node_modules/@polymer/test-fixture/test-fixture-mocha.js"></script>
+	<script src="../node_modules/@polymer/iron-test-helpers/mock-interactions.js" type="module"></script>
+	
+	<script type="module" src="../paper-search-bar.js"></script>
+	<script type="module" src="../node_modules/@polymer/test-fixture/test-fixture.js"></script>
+</head>
+<body>
+	
+	<test-fixture id="TrivialElement">
+		<template>
+			<paper-search-bar></paper-search-bar>
+		</template>
+	</test-fixture>
+	
+	<script type="module">
+		suite('<paper-search-bar>', () => {
+			suite('clear behavior', () => {
+				var element;
+				
+				setup(() => {
+					element = fixture('TrivialElement');
 				});
-
-				suite('filter behavior', function() {
-					var element;
-
-					setup(function() {
-						element = fixture('TrivialElement');
-					});
-
-					test('fires filter event when clicking filter', function(done) {
-						element.addEventListener('paper-search-filter', function() {
-							done();
-						});
-						element._filter();
-					});
+				
+				test('removes input when tapping clear', () => {
+					element.query = 'query';
+					element._clear();
+					expect(element.query).to.be.eql('');
 				});
-
-				suite('search behavior', function() {
-					var element;
-
-					setup(function() {
-						element = fixture('TrivialElement');
+				
+				test('fires clear event when clicking clear', function(done) {
+					element.addEventListener('paper-search-clear', () => {
+						done();
 					});
-
-					test('fires search event when pressing enter', function(done) {
-						element.addEventListener('paper-search-search', function() {
-							done();
-						});
-						MockInteractions.pressEnter(element);
-					});
+					element._clear();
 				});
 			});
-		</script>
-
-	</body>
+			
+			suite('filter behavior', () => {
+				var element;
+				
+				setup(() => {
+					element = fixture('TrivialElement');
+				});
+				
+				test('fires filter event when clicking filter', function(done) {
+					element.addEventListener('paper-search-filter', () => {
+						done();
+					});
+					element._filter();
+				});
+			});
+			
+			suite('search behavior', () => {
+				var element;
+				
+				setup(() => {
+					element = fixture('TrivialElement');
+				});
+				
+				test('fires search event when pressing enter', function(done) {
+					element.addEventListener('paper-search-search', () => {
+						done();
+					});
+					MockInteractions.pressEnter(element);
+				});
+			});
+		});
+	</script>
+	
+</body>
 </html>
