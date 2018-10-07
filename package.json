@@ -46,5 +46,8 @@
     "@polymer/test-fixture": "^4.0.0",
     "wct-browser-legacy": "^1.0.1",
     "@webcomponents/webcomponentsjs": "^2.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
