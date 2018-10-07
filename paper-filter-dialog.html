@@ -1,11 +1,11 @@
 <!doctype html>
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../iron-icons/iron-icons.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="../iron-list/iron-list.html">
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-dialog/paper-dialog.html">
-<link rel="import" href="../paper-toolbar/paper-toolbar.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../paper-item/paper-item.html">
 <link rel="import" href="../paper-item/paper-item-body.html">
@@ -23,27 +23,31 @@ Dialog with which the user can filter the result set
 
 		<style>
 			.dialog {
-				@apply(--paper-filter-dialog);
+				@apply --paper-filter-dialog;
 				--paper-dialog-background-color: var(--paper-filter-dialog-background-color);
 			}
 
-			paper-toolbar {
-				@apply(--paper-filter-toolbar);
-				--paper-toolbar-background: var(--paper-filter-toolbar-background);
+			app-toolbar {
+				@apply --paper-filter-toolbar;
+				--app-toolbar-background: var(--paper-filter-toolbar-background);
+			}
+
+			paper-button {
+				font-size: initial;
 			}
 
 			.dialog,.page {
-				@apply(--layout-fit);
+				@apply --layout-fit;
 			}
 
 			.page {
-				@apply(--layout-vertical);
+				@apply --layout-vertical;
 				margin: 0;
 				padding: 0;
 			}
 
 			.list {
-				@apply(--layout-flex);
+				@apply --layout-flex;
 			}
 
 			.filter {
@@ -65,7 +69,7 @@ Dialog with which the user can filter the result set
 			 * @see https://github.com/PolymerElements/paper-item/pull/65/commits/b41815d6f147a52755fc6db188a3f32a329640ee
 			 */
 			.value-holder {
-				@apply(--layout-vertical);
+				@apply --layout-vertical;
 			}
 
 			.nrResults {
@@ -75,48 +79,50 @@ Dialog with which the user can filter the result set
 
 		<array-selector id="selector" items="{{filters}}" selected="{{_selectedFilter}}"></array-selector>
 		<paper-dialog id="dialog" class="dialog">
-			<div class="page" hidden$="[[_selectedFilter]]">
-				<paper-toolbar>
-					<paper-icon-button on-tap="close" icon="close"></paper-icon-button>
-					<span class="title"></span>
-					<paper-button on-tap="_tapReset" class="reset" hidden$="[[!_hasSelectedFilters(_selectedFilters)]]">[[resetButton]]</paper-button>
-					<paper-button on-tap="_tapApply" dialog-confirm>[[saveButton]]</paper-button>
-				</paper-toolbar>
+			<template is="dom-if" if="{{!_selectedFilter}}">
+				<div class="page">
+					<app-toolbar>
+						<paper-icon-button on-tap="close" icon="close"></paper-icon-button>
+						<span main-title></span>
+						<paper-button on-tap="_tapReset" class="reset" hidden$="[[!_hasSelectedFilters(_selectedFilters)]]">[[resetButton]]</paper-button>
+						<paper-button on-tap="_tapApply" dialog-confirm>[[saveButton]]</paper-button>
+					</app-toolbar>
 
-				<iron-list items="[[filters]]" as="filter" class="list">
-					<template>
-						<paper-item class="filter" on-tap="_tapSelectFilter">
-							<paper-ripple fit></paper-ripple>
-							<paper-item-body two-line class="filter-body">
-								<div class="name">[[filter.name]]</div>
-								<div secondary>[[_getSelectedValuesNames(filter, _selectedFilters)]]</div>
-							</paper-item-body>
-						</paper-item>
-					</template>
-				</iron-list>
-			</div>
-
-			<div class="page" hidden$="[[!_selectedFilter]]">
-				<paper-toolbar>
-					<paper-icon-button icon="arrow-back" on-tap="_tapSelectValues"></paper-icon-button>
-					<span class="title">[[_selectedFilter.name]]</span>
-					<paper-button on-tap="_tapApply" dialog-confirm>[[saveButton]]</paper-button>
-				</paper-toolbar>
-
-				<iron-list id="valuesList" items="[[_selectedFilterValues]]" as="filterValue" class="list">
-					<template>
-						<div class="value-holder">
-							<paper-item class="value">
-								<paper-checkbox name="[[filterValue.id]]" checked="{{filterValue.selected}}"></paper-checkbox>
-								<div>
-									[[filterValue.name]]
-									<span class="nrResults" hidden="[[!filterValue.count]]">([[filterValue.count]])</span>
-								</div>
+					<iron-list items="[[filters]]" as="filter" class="list">
+						<template>
+							<paper-item class="filter" on-tap="_tapSelectFilter">
+								<paper-ripple fit></paper-ripple>
+								<paper-item-body two-line class="filter-body">
+									<div class="name">[[filter.name]]</div>
+									<div secondary>[[_getSelectedValuesNames(filter, _selectedFilters)]]</div>
+								</paper-item-body>
 							</paper-item>
-						</div>
-					</template>
-				</iron-list>
-			</div>
+						</template>
+					</iron-list>
+				</div>
+			</template>
+			<template is="dom-if" if="{{_selectedFilter}}">
+				<div class="page">
+					<app-toolbar>
+						<paper-icon-button icon="arrow-back" on-tap="_tapSelectValues"></paper-icon-button>
+						<span main-title>[[_selectedFilter.name]]</span>
+					</app-toolbar>
+
+					<iron-list id="valuesList" items="[[_selectedFilterValues]]" as="filterValue" class="list">
+						<template>
+							<div class="value-holder">
+								<paper-item class="value">
+									<paper-checkbox name="[[filterValue.id]]" checked="{{filterValue.selected}}"></paper-checkbox>
+									<div>
+										[[filterValue.name]]
+										<span class="nrResults" hidden="[[!filterValue.count]]">([[filterValue.count]])</span>
+									</div>
+								</paper-item>
+							</div>
+						</template>
+					</iron-list>
+				</div>
+			</template>
 		</paper-dialog>
 	</template>
 </dom-module>
@@ -201,9 +207,6 @@ Dialog with which the user can filter the result set
 
 				// Clone selected filters, so it can be changed without touching the external property
 				this._selectedFilters = Object.assign({}, this.selectedFilters);
-
-				// @see https://github.com/PolymerElements/neon-animation/issues/60#issuecomment-152345020
-				this.$.valuesList.fire('iron-resize');
 			}.bind(this), 1);
 		},
 

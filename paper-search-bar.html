@@ -6,7 +6,6 @@
 <link rel="import" href="../iron-icons/image-icons.html">
 <link rel="import" href="../iron-input/iron-input.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../paper-badge/paper-badge.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../paper-styles/default-theme.html">
@@ -19,38 +18,49 @@ Bar in which the user can enter search terms and filter
 <dom-module id="paper-search-bar">
 
 	<template>
-		<style include="iron-flex">
+		<style>
 			:host {
+				display: block;
+			}
+
+			.horizontal-holder {
 				background: var(--background-color, white);
 				display: block;
 				padding: 0 16px;
-				@apply(--layout-horizontal);
-				@apply(--layout-center);
+				@apply --layout-horizontal;
+				@apply --layout-center-center;
+				height: var(--paper-search-bar-height, 48px); /* To resolve `min-height` bug on IE 11 */
+				box-sizing: border-box;
 			}
 
-			.input-panel {
-				@apply(--layout-horizontal);
-				@apply(--layout-center);
+			iron-input {
+				@apply --layout-flex;
+				@apply --layout-vertical;
+				height: 100%; /* To resolve `min-height` bug on IE 11 */
 			}
 
 			.icon {
 				color: var(--disabled-text-color);
-				@apply(--icon-styles);
+				@apply --icon-styles;
 			}
 
 			#input {
+				@apply --layout-flex;
 				margin: 0 10px;
-				border: 0;
-				outline: 0;
 				padding: 16px 0;
 				cursor: text;
 				background: transparent;
 				color: inherit;
-				@apply(--input-styles);
+				@apply --input-styles;
+				border: 0;
+				outline: 0;
+			}
+			#input::-ms-clear {
+				display: none;
 			}
 
 			#input[disabled] {
-				@apply(--disabled-input-styles);
+				@apply --disabled-input-styles;
 			}
 
 			.badge {
@@ -58,22 +68,33 @@ Bar in which the user can enter search terms and filter
 				--paper-badge-opacity: 1;
 				--paper-badge-width: 18px;
 				--paper-badge-height: 18px;
-				--paper-badge-margin-left: -15px;
-				--paper-badge-margin-bottom: -15px;
+				--paper-badge-margin-left: -5px;
+				--paper-badge-margin-bottom: -25px;
+			}
+
+			.badge[invisible] {
+				visibility: hidden;
 			}
 		</style>
 
-		<div class="input-panel flex">
+		<div class="horizontal-holder">
 			<iron-icon icon="[[icon]]" class="icon"></iron-icon>
-			<input is="iron-input" id="input" bind-value="{{query}}" placeholder="[[placeholder]]" class="flex"></input>
-		</div>
-		<paper-icon-button icon="clear" hidden$="[[!query]]" on-tap="_clear" class="icon"></paper-icon-button>
-		<div hidden$="[[hideFilterButton]]">
-			<paper-icon-button id="filter" icon="image:tune" on-tap="_filter" class="icon" disabled="[[disableFilterButton]]"></paper-icon-button>
-			<paper-badge for="filter" label="[[nrSelectedFilters]]" class="badge" hidden$="[[!nrSelectedFilters]]"></paper-badge>
+			<iron-input bind-value="{{query}}">
+				<!-- Define is="iron-input" for backwards compatibility with Polymer 1.x -->
+				<input id="input" is="iron-input" placeholder="[[placeholder]]" value="{{value::input}}"></input>
+			</iron-input>
+
+			<template is="dom-if" if="{{query}}">
+				<paper-icon-button icon="clear" on-tap="_clear" class="icon"></paper-icon-button>
+			</template>
+			<template is="dom-if" if="{{!hideFilterButton}}">
+				<template is="dom-if" if="{{!disableFilterButton}}">
+					<paper-icon-button id="filter" icon="image:tune" on-tap="_filter" class="icon"></paper-icon-button>
+				</template>
+				<paper-badge for="filter" label="[[nrSelectedFilters]]" class="badge" invisible$="[[!nrSelectedFilters]]"></paper-badge>
+			</template>
 		</div>
 	</template>
-
 </dom-module>
 
 <script>
@@ -153,6 +174,11 @@ Bar in which the user can enter search terms and filter
 			'enter': '_search'
 		},
 
+
+		focus: function() {
+			this.$.input.focus();
+		},
+
 		// Private methods
 		_filter: function(e) {
 			this.fire('paper-search-filter');
@@ -170,3 +196,4 @@ Bar in which the user can enter search terms and filter
 })();
 
 </script>
+
