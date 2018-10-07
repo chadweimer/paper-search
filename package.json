@@ -8,9 +8,10 @@
     "search",
     "filter"
   ],
-  "homepage": "https://github.com/collaborne/paper-search",
+  "homepage": "https://github.com/chadweimer/paper-search",
   "name": "@cwmr/paper-search",
   "version": "3.0.0",
+  "repository": "github:chadweimer/paper-search",
   "resolutions": {
     "inherits": "2.0.3",
     "samsam": "1.1.3",
