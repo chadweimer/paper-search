@@ -2,9 +2,9 @@
 <html>
 	<head>
 		<title>Demo</title>
-		<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-		<link rel="import" href="../../paper-styles/demo-pages.html">
-		<link rel="import" href="../paper-search-panel.html">
+		<script src="../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+		<script type="module" src="../node_modules/@polymer/paper-styles/demo-pages.js"></script>
+		<script type="module" src="../paper-search-panel.js"></script>
 
 		<style>
 			.property {
@@ -47,7 +47,7 @@
 			</template>
 		</dom-bind>
 
-		<script>
+		<script type="module">
 			var scope = document.querySelector("dom-bind");
 			scope.hasMore = true;
 			scope.selectedFilters = {
@@ -100,10 +100,10 @@
 			};
 
 			/**
-			 * Generate sample data
-			 *
-			 * @param {boolean} noResults if `true` then an empty result is simulated, otherwise a non-empty result.
-			 */
+			* Generate sample data
+			*
+			* @param {boolean} noResults if `true` then an empty result is simulated, otherwise a non-empty result.
+			*/
 			scope._createItems = function(noResults) {	
 				if (noResults) {
 					return [];

@@ -1,20 +1,16 @@
-paper-search [![Bower version](https://badge.fury.io/bo/paper-search.svg)](http://badge.fury.io/bo/paper-search) [![Travis state](https://travis-ci.org/Collaborne/paper-search.svg?branch=master)](https://travis-ci.org/Collaborne/paper-search) [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/Collaborne/paper-search)
-  
-[![Published on Vaadin  Directory](https://img.shields.io/badge/Vaadin%20Directory-published-00b4f0.svg)](https://vaadin.com/directory/component/Collabornepaper-search)
-[![Stars on vaadin.com/directory](https://img.shields.io/vaadin-directory/star/Collabornepaper-search.svg)](https://vaadin.com/directory/component/Collabornepaper-search)
-=========
+paper-search [![Travis state](https://travis-ci.com/chadweimer/paper-search.svg?branch=master)](https://travis-ci.org/chadweimer/paper-search) [![Published on webcomponents.org](https://img.shields.io/badge/webcomponents.org-published-blue.svg)](https://www.webcomponents.org/element/@cwmr/paper-search)
 
 `paper-search` provides components for a Material Design [search](https://www.google.com/design/spec/patterns/search.html). The web components are built with [Polymer](https://www.polymer-project.org).
 
 To use these elements:
 
-`bower install paper-search`
+`npm install @cwmr/paper-search`
 
 <!--
 ```
 <custom-element-demo>
   <template>
-    <link rel="import" href="paper-search-panel.html">
+    <script type="module" src="paper-search-panel.js"></script>
     <next-code-block></next-code-block>
   </template>
 </custom-element-demo>
@@ -29,7 +25,8 @@ To use these elements:
 
     This software is licensed under the Apache 2 license, quoted below.
 
-    Copyright 2011-2017 Collaborne B.V. <http://github.com/Collaborne/>
+    Copyright 2011-2017 Collaborne B.V. <https://github.com/Collaborne/>
+    Copyright 2018 Chad Weimer <https://github.com/chadweimer>
 
     Licensed under the Apache License, Version 2.0 (the "License"); you may not
     use this file except in compliance with the License. You may obtain a copy of
