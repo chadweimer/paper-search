@@ -60,6 +60,10 @@ Polymer({
                 background: white;
             }
 
+            .value-holder[hidden] {
+                display: none !important;
+            }
+
             /** Workaround for IE11 to center column */
             .filter-body {
                 height: 1px;
