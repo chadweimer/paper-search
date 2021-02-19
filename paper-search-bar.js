@@ -185,7 +185,7 @@ Polymer({
         _clear: function() {
             this.query = "";
             this.$.input.focus();
-            his.fire('paper-search-clear');
+            this.fire('paper-search-clear');
         },
         _search: function() {
             this.fire('paper-search-search');
